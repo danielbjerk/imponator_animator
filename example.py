@@ -33,7 +33,7 @@ class Diode:
         self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
 
 
-    def draw(self):
+    def draw(self, screen):
         self.handle_click()
 
 		# elevation logic
@@ -46,7 +46,6 @@ class Diode:
         pygame.draw.rect(screen,self.bottom_color, self.bottom_rect,border_radius = self.radius//2)
         pygame.draw.rect(screen,self.top_color, self.top_rect,border_radius = self.radius//2)
         screen.blit(self.text_surf, self.text_rect)
-		#self.handle_click()
 
 
     def handle_click(self):
@@ -73,7 +72,7 @@ class Diode:
 
 
 pygame.init()
-screen = pygame.display.set_mode((500,500))
+screen1 = pygame.display.set_mode((500,500))
 pygame.display.set_caption('Gui Menu')
 clock = pygame.time.Clock()
 
@@ -88,9 +87,9 @@ while True:
             pygame.quit()
             sys.exit()
 
-    screen.fill('#DCDDD8')
-    diode1.draw()
-    diode2.draw()
+    screen1.fill('#DCDDD8')
+    diode1.draw(screen1)
+    diode2.draw(screen1)
 
     pygame.display.update()
     clock.tick(60)
