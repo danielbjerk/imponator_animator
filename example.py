@@ -4,8 +4,8 @@
 
 import pygame, sys
 
-class Button:
-    def __init__(self,radius,pos):
+class Diode:
+    def __init__(self,radius,pos,colors):
 		#Core attributes
         elevation = 5	# Previously an argument
         self.pressed = False
@@ -15,8 +15,9 @@ class Button:
         self.original_y_pos = pos[1]
 
 		# Diode strength
+        self.strength_to_color = colors
         self.strength = 0
-        self.strength_to_color = [(0,0,0)] + [(255 - 13*i, 0, 0) for i in range(15)]
+        self.max_strength = len(colors)
 
 		# top rectangle
         self.top_rect = pygame.Rect(pos,(radius,radius))
@@ -58,7 +59,7 @@ class Button:
                 self.dynamic_elecation = self.elevation
                 if self.pressed == True:
                     self.pressed = False
-                    self.strength = (self.strength + 1) % 16
+                    self.strength = (self.strength + 1) % self.max_strength
         else:
             self.dynamic_elecation = self.elevation
         self.top_color = self.strength_to_color[self.strength]
@@ -76,7 +77,10 @@ screen = pygame.display.set_mode((500,500))
 pygame.display.set_caption('Gui Menu')
 clock = pygame.time.Clock()
 
-button1 = Button(40,(200,250))
+colors = [(0,0,0)] + [(255 - 13*i, 0, 0) for i in range(15)]
+diode1 = Diode(40,(200,250),colors)
+colors1 = [(0,0,0)] + [(0, 255 - 13*i, 0) for i in range(6)]
+diode2 = Diode(30, (300, 350), colors1)
 
 while True:
     for event in pygame.event.get():
@@ -85,7 +89,8 @@ while True:
             sys.exit()
 
     screen.fill('#DCDDD8')
-    button1.draw()
+    diode1.draw()
+    diode2.draw()
 
     pygame.display.update()
     clock.tick(60)
