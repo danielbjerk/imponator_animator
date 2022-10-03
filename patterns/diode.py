@@ -1,31 +1,73 @@
-import pygame
+###
+### Source: https://github.com/clear-code-projects/elevatedButton
+###
 
-class Diode():
-    def __init__(self, screen_pos, pattern_coord):
-        self.screen_pos = screen_pos
-        self.pattern_coord = pattern_coord
+import pygame, sys
+
+class Diode:
+    def __init__(self,radius,pos,colors):
+		#Core attributes
+        pygame.init()   # Unsafe?
+        self.pos = pos
+        elevation = 5	# Previously an argument
+        self.pressed = False
+        self.radius = radius
+        self.elevation = elevation
+        self.dynamic_elevation = elevation
+        self.original_y_pos = pos[1]
+
+		# Diode strength
+        self.strength_to_color = colors
         self.strength = 0
+        self.max_strength = len(colors)
 
+		# top rectangle
+        self.top_rect = pygame.Rect(pos,(radius,radius))
+        self.top_color = self.strength_to_color[self.strength]
 
-        self.width = 20
-        self.height = 20
-        self.x = screen_pos[0]
-        self.y = screen_pos[1]
+        # bottom rectangle
+        self.bottom_rect = pygame.Rect(pos,(radius,radius))
+        self.bottom_color = '#354B5E'
 
-        self.buttonSurface = pygame.Surface((self.width, self.height))
-        self.buttonRect = pygame.Rect(self.x, self.y, self.width, self.height)
-
-        font = pygame.font.SysFont('Arial', 40)
-        self.buttonSurf = font.render("hello", True, (20, 20, 20))
-
-
-    def process(self):
-        pass
+        # text
+        self.font = pygame.font.Font(None,30)
+        self.text_surf = self.font.render(str(self.strength),True,'#FFFFFF')
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
 
 
     def draw(self, screen):
-        self.buttonSurface.blit(self.buttonSurf, [
-            self.buttonRect.width/2 - self.buttonSurf.get_rect().width/2,
-            self.buttonRect.height/2 - self.buttonSurf.get_rect().height/2
-        ])
-        screen.blit(self.buttonSurface, self.buttonRect)
+        self.handle_click()
+
+		# elevation logic
+        self.top_rect.y = self.original_y_pos - self.dynamic_elecation
+        self.text_rect.center = self.top_rect.center
+
+        self.bottom_rect.midtop = self.top_rect.midtop
+        self.bottom_rect.height = self.top_rect.height + self.dynamic_elecation
+
+        pygame.draw.rect(screen,self.bottom_color, self.bottom_rect,border_radius = self.radius//2)
+        pygame.draw.rect(screen,self.top_color, self.top_rect,border_radius = self.radius//2)
+        screen.blit(self.text_surf, self.text_rect)
+
+
+    def handle_click(self):
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                self.dynamic_elecation = 0
+                self.pressed = True
+            else:
+                self.dynamic_elecation = self.elevation
+                if self.pressed == True:
+                    self.pressed = False
+                    self.strength = (self.strength + 1) % self.max_strength
+        else:
+            self.dynamic_elecation = self.elevation
+        self.top_color = self.strength_to_color[self.strength]
+        self.text_surf = self.font.render(str(self.strength),True,'#FFFFFF')
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+
+    def reset_strength(self):
+        self.strength = 0
+
