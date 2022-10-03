@@ -6,37 +6,37 @@ import pygame, sys
 
 class Button:
 	def __init__(self,radius,pos):
-		#Core attributes 
+		#Core attributes
 		elevation = 5	# Previously an argument
 		self.pressed = False
 		self.radius = radius
 		self.elevation = elevation
-		self.dynamic_elecation = elevation
+		self.dynamic_elevation = elevation
 		self.original_y_pos = pos[1]
 
 		# Diode strength
 		self.strength = 0
-		self.strength_to_color = [(0,0,0)] + [(105 + 10*i, 0, 0) for i in range(15)]
+		self.strength_to_color = [(0,0,0)] + [(255 - 15*i, 0, 0) for i in range(15)]
 
-		# top rectangle 
+		# top rectangle
 		self.top_rect = pygame.Rect(pos,(radius,radius))
-		self.top_color = '#475F77'
+		self.top_color = self.strength_to_color[self.strength]
 
-		# bottom rectangle 
+        # bottom rectangle
 		self.bottom_rect = pygame.Rect(pos,(radius,radius))
 		self.bottom_color = '#354B5E'
-		
+
 		# text
 		self.text_surf = gui_font.render(str(self.strength),True,'#FFFFFF')
 		self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
-    
+
 
 	def draw(self):
 		self.handle_click()
-		
-		# elevation logic 
+
+		# elevation logic
 		self.top_rect.y = self.original_y_pos - self.dynamic_elecation
-		self.text_rect.center = self.top_rect.center 
+		self.text_rect.center = self.top_rect.center
 
 		self.bottom_rect.midtop = self.top_rect.midtop
 		self.bottom_rect.height = self.top_rect.height + self.dynamic_elecation
@@ -57,7 +57,7 @@ class Button:
 				self.dynamic_elecation = self.elevation
 				if self.pressed == True:
 					self.pressed = False
-					self.strength = (self.strength - 1) % 16
+					self.strength = (self.strength + 1) % 16
 		else:
 			self.dynamic_elecation = self.elevation
 		self.top_color = self.strength_to_color[self.strength]
