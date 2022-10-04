@@ -11,6 +11,7 @@ class Diode:
         self.pos = pos
         elevation = 5	# Previously an argument
         self.pressed = False
+        self.pressed_m2 = False
         self.radius = radius
         self.elevation = elevation
         self.dynamic_elevation = elevation
@@ -62,11 +63,17 @@ class Diode:
             if pygame.mouse.get_pressed()[0]:
                 self.dynamic_elevation = 0
                 self.pressed = True
+            elif pygame.mouse.get_pressed()[2]:
+                self.dynamic_elevation = 0
+                self.pressed_m2 = True
             else:
                 self.dynamic_elevation = self.elevation
                 if self.pressed == True:
                     self.pressed = False
                     self.strength = (self.strength - 1) % self.max_strength
+                elif self.pressed_m2 == True:
+                    self.pressed_m2 = False
+                    self.strength = (self.strength + 1) % self.max_strength
         else:
             self.dynamic_elevation = self.elevation
 

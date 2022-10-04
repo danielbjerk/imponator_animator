@@ -53,7 +53,6 @@ class InteractiveAnimator():
     def iterate_frames(self):
         last_strength_map = self.clickable_pattern.get_strength_map()
         self.last_pattern.set_strength_map(last_strength_map)
-        #self.clickable_pattern.clear_all_diodes()
     
 
     def save_and_iterate(self):
@@ -68,17 +67,15 @@ class InteractiveAnimator():
         screen.fill('#DCDDD8')
 
         objects = self.last_pattern.diodes + self.clickable_pattern.diodes + [self.save_button, self.clear_button]
-        # Redraw screen here.
         for obj in objects:
             obj.draw(screen)
 
-        # Flip the display so that the things we drew actually show up.
         pygame.display.flip()
 
 
     def run(self):
-        dt = 1/self.fps # dt is the time since last frame.
-        while True: # Loop forever!
+        dt = 1/self.fps
+        while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
