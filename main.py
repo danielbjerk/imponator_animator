@@ -17,6 +17,7 @@ class InteractiveAnimator():
         self.last_frame = None#pattern.BLANK_FRAME
         self.frames = [self.last_frame]
 
+        self.pattern = pattern
         self.objects = pattern.diodes #+ [save+next-button og clear-button]
 
         self.save_path = save_destination
@@ -56,8 +57,7 @@ class InteractiveAnimator():
             obj.draw(screen)
 
         # Flip the display so that the things we drew actually show up.
-        #pygame.display.flip()
-        pygame.display.update()
+        pygame.display.flip()
 
 
     def run(self):
@@ -73,6 +73,6 @@ class InteractiveAnimator():
 
 
 if __name__ == "__main__":
-    ia = InteractiveAnimator(omega.Omega())
+    ia = InteractiveAnimator(omega.Omega(origin=(100,100), width=300))
     ia.run()
 
