@@ -1,8 +1,10 @@
-from re import M
+from patterns.pattern import Pattern
 from patterns.diode import Diode
 
-class Omega():
+class Omega(Pattern):
 	def __init__(self, origin=(50,50), width=450, clickable_diodes=True):
+		super().__init__()		
+		
 		# Pattern requires size (450, 450)
 		pattern_width = 450
 		diode_positions = [
@@ -56,19 +58,3 @@ class Omega():
 		(7,0)
 		]
 		self.pos_to_pattern_coords = dict(zip(diode_positions_offset, pattern_coordinates))
-
-
-	def get_strength_map(self):
-		mapping = dict()
-		for diode in self.diodes:
-				mapping[self.pos_to_pattern_coords[diode.pos]] = diode.strength
-		return mapping
-
-	def set_strength_map(self, mapping):
-		coord_to_diode = dict(zip([self.pos_to_pattern_coords[d.pos] for d in self.diodes], self.diodes))
-		for coord in mapping:
-			coord_to_diode[coord].set_strength(mapping[coord])
-
-	def clear_all_diodes(self):
-		for d in self.diodes:
-			d.reset_strength()

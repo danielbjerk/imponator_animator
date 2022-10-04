@@ -8,12 +8,13 @@ import pygame
 from pygame.locals import *
 
 import coordinates_to_hex as hx
-from patterns import omega
+from patterns.omega import Omega
+from patterns.pattern import Pattern
 from button import Button
 
 
 class InteractiveAnimator():
-    def __init__(self, pattern, save_destination="animation.h"):
+    def __init__(self, pattern : Pattern, save_destination="animation.h"):
         pygame.init()
 
         #self.last_frame = None#pattern.BLANK_FRAME
@@ -86,6 +87,5 @@ class InteractiveAnimator():
 
 
 if __name__ == "__main__":
-    ia = InteractiveAnimator(omega.Omega)
+    ia = InteractiveAnimator(Omega)
     ia.run()
-
