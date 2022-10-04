@@ -30,7 +30,7 @@ class Omega():
 		diode_radius = int(40 * scale_factor)
 		diode_positions_offset = [(p[0] + origin[0], p[1] + origin[1]) for p in diode_positions_scaled]
 
-		colors = [(0,0,0)] + [(255 - 13*i, 0, 0) for i in range(15)]
+		colors = [(0,0,0)] + [(255 - 13*i, 0, 0) for i in range(15)][::-1]
 		self.diodes = [
 				Diode(  diode_radius, diode_positions_offset[i], 
 						colors, clickable_diodes

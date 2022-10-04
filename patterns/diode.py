@@ -66,7 +66,7 @@ class Diode:
                 self.dynamic_elevation = self.elevation
                 if self.pressed == True:
                     self.pressed = False
-                    self.strength = (self.strength + 1) % self.max_strength
+                    self.strength = (self.strength - 1) % self.max_strength
         else:
             self.dynamic_elevation = self.elevation
 
