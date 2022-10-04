@@ -23,6 +23,7 @@ class InteractiveAnimator():
         self.clickable_pattern = pattern(origin=(400,50))
 
         self.save_button = Button('Lagre og iterér',200,40,(400,450),5,lambda : self.save_and_iterate())
+        self.clear_button = Button('Nullstill ramme',200,40,(650,450),5,lambda : self.clickable_pattern.clear_all_diodes())
 
         self.save_path = save_destination
 
@@ -52,7 +53,7 @@ class InteractiveAnimator():
     def iterate_frames(self):
         last_strength_map = self.clickable_pattern.get_strength_map()
         self.last_pattern.set_strength_map(last_strength_map)
-        self.clickable_pattern.clear_all_diodes()
+        #self.clickable_pattern.clear_all_diodes()
     
 
     def save_and_iterate(self):
@@ -66,7 +67,7 @@ class InteractiveAnimator():
         """
         screen.fill('#DCDDD8')
 
-        objects = self.last_pattern.diodes + self.clickable_pattern.diodes + [self.save_button] #og clear-button]
+        objects = self.last_pattern.diodes + self.clickable_pattern.diodes + [self.save_button, self.clear_button]
         # Redraw screen here.
         for obj in objects:
             obj.draw(screen)
