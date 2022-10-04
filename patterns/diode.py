@@ -40,6 +40,10 @@ class Diode:
     def draw(self, screen):
         if self.clickable: self.handle_click()
 
+        self.top_color = self.strength_to_color[self.strength]
+        self.text_surf = self.font.render(str(self.strength),True,'#FFFFFF')
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
 		# elevation logic
         self.top_rect.y = self.original_y_pos - self.dynamic_elevation
         self.text_rect.center = self.top_rect.center
@@ -65,11 +69,11 @@ class Diode:
                     self.strength = (self.strength + 1) % self.max_strength
         else:
             self.dynamic_elevation = self.elevation
-        self.top_color = self.strength_to_color[self.strength]
-        self.text_surf = self.font.render(str(self.strength),True,'#FFFFFF')
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
 
+
+
+    def set_strength(self, new_strength):
+        self.strength = new_strength
 
     def reset_strength(self):
-        self.strength = 0
-
+        self.set_strength(0)

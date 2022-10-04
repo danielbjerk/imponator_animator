@@ -24,7 +24,7 @@ def set_all_pixels_in_list(hexlist, coord_strength_tups):
     return hexlist
 
 
-def hexlist_to_line(hexlist):
+def hexlist_to_string(hexlist):
     hexstr = ", ".join(hexlist)
     hexstr = "{{" + hexstr + "}, 0x00}, \\"
     return hexstr
@@ -33,4 +33,4 @@ def hexlist_to_line(hexlist):
 if __name__ == "__main__":
     hxlist = set_all_pixels_in_list(EMPTY_LIST, [((2, 0), 12), ((3, 1), 12), ((4, 0), 12), ((4, 1), 2), ((2, 0), 13)])
     print(hxlist)
-    print(hexlist_to_line(hxlist))
+    print(hexlist_to_string(hxlist))

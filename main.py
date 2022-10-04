@@ -7,43 +7,57 @@ import sys
 import pygame
 from pygame.locals import *
 
+import coordinates_to_hex as hx
 from patterns import omega
+from button import Button
 
 
 class InteractiveAnimator():
     def __init__(self, pattern, save_destination="animation.h"):
         pygame.init()
 
-        self.last_frame = None#pattern.BLANK_FRAME
-        self.frames = [self.last_frame]
+        #self.last_frame = None#pattern.BLANK_FRAME
+        #self.frames = [self.last_frame]
 
-        self.pattern = pattern
-        self.objects = pattern.diodes #+ [save+next-button og clear-button]
+        self.last_pattern = pattern(origin=(50,50), width=300, clickable_diodes=False)
+        self.clickable_pattern = pattern(origin=(400,50))
+
+        self.save_button = Button('Lagre og iterér',200,40,(400,450),5,lambda : self.save_and_iterate())
 
         self.save_path = save_destination
-
 
         # Set up the clock. This will tick every frame and thus maintain a relatively constant framerate. Hopefully.
         self.fps = 60.0
         self.fpsClock = pygame.time.Clock()
 
         # Set up the window.
-        width, height = 640, 480
+        width, height = 900, 540
         self.screen = pygame.display.set_mode((width, height))
         pygame.display.set_caption('Imponator-Animator')
-        # screen is the surface representing the window.
-        # PyGame surfaces can be thought of as screen sections that you can draw onto.
-        # You can also draw surfaces onto other surfaces, rotate surfaces, and transform surfaces.
 
 
     def save_hexstring(self):
         hexlist = hx.EMPTY_LIST
-        for diode in self.objects:
-            hexlist = hx.update_hexlist(hexlist, diode.hex_coords, diode.strength)
-        hexstring = hx.list_to_string(hexlist)
+        for diode in self.clickable_pattern.diodes:
+            hexlist = hx.set_single_pixel(
+                hexlist, 
+                self.clickable_pattern.pos_to_pattern_coords[diode.pos], 
+                diode.strength)
+        hexstring = hx.hexlist_to_string(hexlist)
 
-        with open(self.save_path) as fp:
-            fp.writelines(hexstring)
+        with open(self.save_path, "a+") as fp:
+            fp.write(hexstring + "\n")
+
+    
+    def iterate_frames(self):
+        last_strength_map = self.clickable_pattern.get_strength_map()
+        self.last_pattern.set_strength_map(last_strength_map)
+        self.clickable_pattern.clear_all_diodes()
+    
+
+    def save_and_iterate(self):
+        self.save_hexstring()
+        self.iterate_frames()
 
 
     def draw(self, screen):
@@ -52,8 +66,9 @@ class InteractiveAnimator():
         """
         screen.fill('#DCDDD8')
 
+        objects = self.last_pattern.diodes + self.clickable_pattern.diodes + [self.save_button] #og clear-button]
         # Redraw screen here.
-        for obj in self.objects:
+        for obj in objects:
             obj.draw(screen)
 
         # Flip the display so that the things we drew actually show up.
@@ -73,6 +88,6 @@ class InteractiveAnimator():
 
 
 if __name__ == "__main__":
-    ia = InteractiveAnimator(omega.Omega(origin=(100,100), width=300))
+    ia = InteractiveAnimator(omega.Omega)
     ia.run()
 
